@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const authUserRout = require("./auth/user/userAuthRouter/router.js");
+const stockRouter = require("./router/stockRouter.js");
 const port = process.env.PORT || 3637;
 
 app.use(bodyParser.json());
@@ -13,6 +14,7 @@ app.use(
 );
 
 app.use("/auth/user", authUserRout);
+app.use("/stock", stockRouter);
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
