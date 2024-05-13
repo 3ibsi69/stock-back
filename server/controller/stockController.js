@@ -4,8 +4,13 @@ module.exports = {
   async createStock(req, res) {
     try {
       const data = req.body;
-      const stock = await StockService.create(data);
-      res.status(200).send(stock);
+      const CodeByStock = await StockService.getStockByCode(data.code);
+      if (CodeByStock) {
+        return res.send({ message: "Code already exist" });
+      } else {
+        const stock = await StockService.create(data);
+        res.status(200).send(stock);
+      }
     } catch (error) {
       res.status(500).send(error);
     }

@@ -7,6 +7,11 @@ module.exports = new (class StockService {
   getStockById(id) {
     return Stock.findOne({ _id: id });
   }
+  getStockByCode(code) {
+    return Stock.findOne({
+      code: code,
+    });
+  }
   getAllStock() {
     return Stock.find();
   }

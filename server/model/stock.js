@@ -4,10 +4,17 @@ mongoose.Promise = global.Promise;
 
 const StockSchema = new mongoose.Schema(
   {
+    code: {
+      type: String,
+      unique: true,
+    },
     name: String,
+    designation: String,
     category: String,
-    quantity: Number,
-    price: Number,
+    prixAchatHT: Number,
+    prixVenteHT: Number,
+    MargeHT: Number,
+    quantite: Number,
   },
   {
     timestamps: true,
