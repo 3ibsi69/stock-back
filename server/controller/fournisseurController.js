@@ -4,7 +4,7 @@ module.exports = {
   async createFournisseur(req, res) {
     try {
       const data = req.body;
-      const fournisseur = await FournisseurService.create(data);
+      const fournisseur = await FournisseurService.addFournisseur(data);
       res.status(200).send(fournisseur);
     } catch (error) {
       res.status(500).send(error);
