@@ -5,11 +5,8 @@ module.exports = {
   async createFacture(req, res) {
     try {
       const data = req.body;
-      console.log(data.products._id);
       for (const product of data.products) {
-        console.log(product, "product");
         const stockItem = await StockService.getStockById({ _id: product._id });
-        console.log(stockItem);
         if (stockItem) {
           stockItem.quantity -= product.quantity;
           await StockService.update(stockItem._id, stockItem);
