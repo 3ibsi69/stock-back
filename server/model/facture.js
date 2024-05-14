@@ -1,12 +1,23 @@
 const mongoose = require("mongoose");
 const db = require("./connection.js");
-const Stock = require("./stock.js");
 mongoose.Promise = global.Promise;
 const FactureSchema = new mongoose.Schema(
   {
     to: String,
     from: String,
-    products: [],
+
+    products: [
+      {
+        code: String,
+        name: String,
+        designation: String,
+        category: String,
+        prixAchatHT: Number,
+        prixVenteHT: Number,
+        MargeHT: String,
+        quantite: Number,
+      },
+    ],
   },
   {
     timestamps: true,

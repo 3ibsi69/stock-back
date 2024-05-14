@@ -17,4 +17,7 @@ module.exports = new (class FactureService {
   update(_id, data) {
     return Facture.findOneAndUpdate({ _id: _id }, data);
   }
+  deleteAll() {
+    return Facture.deleteMany({});
+  }
 })();
