@@ -3,7 +3,7 @@ const { Readable } = require("stream");
 
 const generatePDF = (req, res) => {
   const { content } = req.body;
-
+  let dateNow = new Date();
   if (!content) {
     return res.status(400).json({ error: "HTML content is required" });
   }
@@ -27,27 +27,25 @@ const generatePDF = (req, res) => {
       
         <div class="invoice">
         <div class="head">
-          <div class="box" >
-            <div style="text-align: center;"><h3>Détails Facture</h3></div>
-            
-              <h3>Facturé le : 202200306</h3>
-              <p>Facturé le : 15/08/2022</p>
-              <p>Type Voyage : Aérien</p>
-           
-          </div>
-          <div class="box" >
-            <div style="text-align: center;"><h3>Détails Client</h3></div>
-          
-              <h3>Client: ${content[0].to}</h3>
-              <p>Address : 27BIS LIBAN LAFAYETTE TUNIS</p>
-              <p>Tél : 20028952</p>
-          
-    
-            <p >CODE TVA : 21733891</p>
-          </div>
+        <div class="box">
+        <div style="text-align: center"><h3>Détails Facture</h3></div>
+        <h3>Num Facture : 202200306</h3>
+        <p>Client : ${content[0].to} </p>
+        <p>Methode de paiement: Cash</p>
+        <p>Facturé le : ${dateNow.getDate()}/${dateNow.getMonth()}/${dateNow.getFullYear()}</p>
+      </div>
+      <div class="box">
+        <div style="text-align: center"><h3>Détails société</h3></div>
+        <h3>Nom : BOUSSADA AUTO</h3>
+        <p>Adresse : 28 Avenue hadi chaker 1002 Tunis</p>
+        <p>Numero de téléphone : +216 99 573 845 | +216 99 573 845</p>
+        <p>Adresse Email : hamidoboussada23@gmail.com</p>
+        <p>Matricule fiscal : 1275891C/B/M 000</p>
+        <p>Rib : 123456789123456789123456</p>
+      </div>
         </div>
         <div class="invoice-body">
-          <div style="text-align: center;"><h3>Désignation</h3></div>
+          <div style="text-align: center;"><h3>Products</h3></div>
           <table>
             <tr>
               <th>Code</th>
@@ -55,7 +53,7 @@ const generatePDF = (req, res) => {
               <th>Category</th>
               <th>Quantite</th>
               <th>Prix Vente HT</th>
-              <th>Montant Avec TVA</th>
+              <th>Montant</th>
             </tr>
             ${content
               .map((item) =>
@@ -68,13 +66,11 @@ const generatePDF = (req, res) => {
                           <td>${product.category}</td>
                           <td>${product.quantite}</td>
                           <td>${product.prixVenteHT}</td>
-                          <td>${
-                            (
-                              product.quantite *
-                              (product.prixVenteHT * 1.19 +
-                                (product.prixVenteHT * product.MargeHT) / 100)
-                            ).toFixed(2) // Ensures there are a maximum of two digits after the decimal point
-                          }</td>
+                          <td>${(
+                            product.quantite *
+                            (product.prixVenteHT * 1.19 +
+                              (product.prixVenteHT * product.MargeHT) / 100)
+                          ).toFixed(3)}</td>
                         
                         </tr>
                       `
@@ -85,7 +81,7 @@ const generatePDF = (req, res) => {
             </table>    
           <div class="total">
             <h3 style="margin-right: 10px;">TOTAL :  ${totalMontantAvecTVA.toFixed(
-              2
+              3
             )} TND</h3>
           </div>
         </div>
@@ -97,10 +93,10 @@ const generatePDF = (req, res) => {
                 <tr>
                   <th>BASE TVA</th>
                   <th>TAUX TVA</th>
-                  <th>MT TVA</th>
+                  <th>Remise</th>
                 </tr>
                 <tr>
-                  <td>0.000 TND</td>
+                  <td style="text-align: center">19 %</td>
                   <td>0.000 TND</td>
                   <td>0.000 TND</td>
                 </tr>
@@ -135,13 +131,11 @@ const generatePDF = (req, res) => {
             <div class="payment">
               <div>
                 <h3>Montant Principal</h3>
-                <h3>Montant des frais</h3>
                 <h3>Timbre Fiscal</h3>
                 <h3>Montant général</h3>
               </div>
               <div>
                 <h3>1245.000 TND</h3>
-                <h3>20.000 TND</h3>
                 <h3>0.600 TND</h3>
                 <h3>1265.600 TND</h3>
               </div>
@@ -212,7 +206,7 @@ const generatePDF = (req, res) => {
       }
 
       .box {
-        height: 130px;
+        height: 165px;
         border: 2px solid black;
         display: grid;
         grid-template-rows: 2fr 6fr 1fr;
