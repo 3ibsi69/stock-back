@@ -13,7 +13,7 @@ const StockSchema = new mongoose.Schema(
     category: String,
     prixAchatHT: Number,
     prixVenteHT: Number,
-    MargeHT: Number,
+    MargeHT: String,
     quantite: Number,
   },
   {
