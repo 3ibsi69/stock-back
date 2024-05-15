@@ -326,8 +326,8 @@ const generatePDFDevis = (req, res) => {
         <div class="invoice">
         <div class="head">
         <div class="box">
-        <div style="text-align: center"><h3>Détails Facture</h3></div>
-        <h3>Num Facture :  ${content[0].count}</h3>
+        <div style="text-align: center"><h3>Détails Devis</h3></div>
+        <h3>Num Devis :  ${content[0].count}</h3>
         <p>Client : ${content[0].to} </p>
         <p>Methode de paiement: ${content[0].PaimentMethod}</p>
         <p>Facturé le : ${dateNow.getDate()}/${dateNow.getMonth()}/${dateNow.getFullYear()}</p>
@@ -604,8 +604,8 @@ const generatePDFBon = (req, res) => {
         <div class="invoice">
         <div class="head">
         <div class="box">
-        <div style="text-align: center"><h3>Détails Facture</h3></div>
-        <h3>Num Facture :  ${content[0].count}</h3>
+        <div style="text-align: center"><h3>Détails bon de livraison</h3></div>
+        <h3>Num bon de livraison :  ${content[0].count}</h3>
         <p>Client : ${content[0].to} </p>
         <p>Methode de paiement: ${content[0].PaimentMethod}</p>
         <p>Facturé le : ${dateNow.getDate()}/${dateNow.getMonth()}/${dateNow.getFullYear()}</p>
