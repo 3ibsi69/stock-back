@@ -5,7 +5,10 @@ const FactureSchema = new mongoose.Schema(
   {
     to: String,
     from: String,
-
+    PaimentMethod: String,
+    timbreFiscal: Boolean,
+    giveRemise: Boolean,
+    Remise: Number,
     products: [
       {
         code: String,

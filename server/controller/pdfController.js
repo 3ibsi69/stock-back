@@ -3,10 +3,25 @@ const { Readable } = require("stream");
 
 const generatePDF = (req, res) => {
   const { content } = req.body;
+  console.log("content", content);
   let dateNow = new Date();
   if (!content) {
     return res.status(400).json({ error: "HTML content is required" });
   }
+  // montant avec tva
+  // ${(
+  //   product.quantite *
+  //   (product.prixVenteHT * 1.19 +
+  //     (product.prixVenteHT * product.MargeHT) / 100)
+  // ).toFixed(3)}
+  let totalMontantSansTVA = content.reduce((total, item) => {
+    return (
+      total +
+      item.products.reduce((subtotal, product) => {
+        return subtotal + product.quantite * product.prixVenteHT;
+      }, 0)
+    );
+  }, 0);
   let totalMontantAvecTVA = content.reduce((total, item) => {
     return (
       total +
@@ -20,6 +35,17 @@ const generatePDF = (req, res) => {
       }, 0)
     );
   }, 0);
+
+  let remise = content[0].giveRemise ? parseFloat(content[0].Remise) : 0;
+  let timbreFiscal = content[0].timbreFiscal ? 1 : 0;
+
+  let totalMontantAvecTVAetRemise =
+    totalMontantSansTVA * 1.19 +
+    timbreFiscal -
+    ((totalMontantSansTVA * 1.19 + timbreFiscal) * remise) / 100;
+
+  let tauxTva = totalMontantAvecTVA - totalMontantSansTVA;
+
   let options = { format: "A4" };
   let f = {
     content: `
@@ -29,9 +55,9 @@ const generatePDF = (req, res) => {
         <div class="head">
         <div class="box">
         <div style="text-align: center"><h3>Détails Facture</h3></div>
-        <h3>Num Facture : 202200306</h3>
+        <h3>Num Facture :  ${content[0].factureId}</h3>
         <p>Client : ${content[0].to} </p>
-        <p>Methode de paiement: Cash</p>
+        <p>Methode de paiement: ${content[0].PaimentMethod}</p>
         <p>Facturé le : ${dateNow.getDate()}/${dateNow.getMonth()}/${dateNow.getFullYear()}</p>
       </div>
       <div class="box">
@@ -66,10 +92,8 @@ const generatePDF = (req, res) => {
                           <td>${product.category}</td>
                           <td>${product.quantite}</td>
                           <td>${product.prixVenteHT}</td>
-                          <td>${(
-                            product.quantite *
-                            (product.prixVenteHT * 1.19 +
-                              (product.prixVenteHT * product.MargeHT) / 100)
+                          <td> ${(
+                            product.quantite * product.prixVenteHT
                           ).toFixed(3)}</td>
                         
                         </tr>
@@ -80,7 +104,7 @@ const generatePDF = (req, res) => {
               .join("")}
             </table>    
           <div class="total">
-            <h3 style="margin-right: 10px;">TOTAL :  ${totalMontantAvecTVA.toFixed(
+            <h3 style="margin-right: 10px;">TOTAL :  ${totalMontantSansTVA.toFixed(
               3
             )} TND</h3>
           </div>
@@ -97,35 +121,16 @@ const generatePDF = (req, res) => {
                 </tr>
                 <tr>
                   <td style="text-align: center">19 %</td>
-                  <td>0.000 TND</td>
-                  <td>0.000 TND</td>
+                  <td> ${tauxTva.toFixed(3)} TND</td>
+                   ${
+                     content[0].giveRemise
+                       ? `<td>${content[0].Remise}%</td>`
+                       : `<td>0%</td>`
+                   }
                 </tr>
               </table>
             </div>
-            <div class="left-down">
-              <ul>
-                <li>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptates suscipit
-                </li>
-                <li>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptates suscipit
-                </li>
-                <li>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptates suscipit
-                </li>
-                <li>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptates suscipit
-                </li>
-                <li>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptates suscipit
-                </li>
-              </ul>
-            </div>
+            
           </div>
           <div class="footer-right">
             <div class="payment">
@@ -135,33 +140,21 @@ const generatePDF = (req, res) => {
                 <h3>Montant général</h3>
               </div>
               <div>
-                <h3>1245.000 TND</h3>
-                <h3>0.600 TND</h3>
-                <h3>1265.600 TND</h3>
+                <h3>${totalMontantSansTVA.toFixed(3)} TND</h3>
+                ${
+                  content[0].timbreFiscal
+                    ? "<h3>1.000 TND</h3>"
+                    : "<h3>0.000 TND</h3>"
+                }
+                <h3>${totalMontantAvecTVAetRemise.toFixed(3)} TND</h3>
               </div>
             </div>
-            <p
-              style="
-                width: 80%;
-                margin: 0 auto;
-                text-align: center;
-                margin-top: 10px;
-              "
-            >
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestias
-              vel quae consectetur, reiciendis corporis veritatis? Error aut
-            </p>
           </div>
         </div>
       </div>
       
     
-      <p class="text-footer">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-        impedit, numquam obcaecati distinctio voluptas minus optio. Architecto
-        fugit nemo sint nostrum inventore voluptatibus perferendis veritatis
-        velit, quos asperiores debitis doloribus.
-      </p>
+      
       </div>
       <style>
       .container {
@@ -179,7 +172,7 @@ const generatePDF = (req, res) => {
         height: 18vh;
       }
       .footer-right {
-        height: 35.8vh;
+        height: 16.05vh;
       }
       .total {
         width: 100%;
@@ -200,7 +193,7 @@ const generatePDF = (req, res) => {
         grid-template-columns: 1fr 1fr;
       }
       .payment div {
-        min-height: 100px;
+        min-height: 181px;
         border: 1px solid black;
         padding-left: 10px;
       }
