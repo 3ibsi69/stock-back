@@ -32,9 +32,11 @@ module.exports = {
           throw new Error("Stock item not found");
         }
       }
+      countFacture = await FactureService.countFacture();
       const factureData = {
         to: data.to,
         from: data.from,
+        count: countFacture + 1,
         products: factureProducts,
       };
 

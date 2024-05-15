@@ -9,6 +9,8 @@ const FactureSchema = new mongoose.Schema(
     timbreFiscal: Boolean,
     giveRemise: Boolean,
     Remise: Number,
+    count: Number,
+
     products: [
       {
         code: String,

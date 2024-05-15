@@ -31,9 +31,11 @@ module.exports = {
           throw new Error("Stock item not found");
         }
       }
+      const countDevis = await DevisService.countDevis();
       const DevisData = {
         to: data.to,
         from: data.from,
+        count: countDevis + 1,
         products: DevisProducts,
       };
 

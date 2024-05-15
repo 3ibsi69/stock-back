@@ -20,4 +20,7 @@ module.exports = new (class DevisService {
   deleteAll() {
     return Devis.deleteMany({});
   }
+  countDevis() {
+    return Devis.countDocuments();
+  }
 })();

@@ -20,4 +20,7 @@ module.exports = new (class FactureService {
   deleteAll() {
     return Facture.deleteMany({});
   }
+  countFacture() {
+    return Facture.countDocuments();
+  }
 })();

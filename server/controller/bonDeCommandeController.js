@@ -31,9 +31,11 @@ module.exports = {
           throw new Error("Stock item not found");
         }
       }
+      const countBon = await BonService.countBon();
       const BonData = {
         to: data.to,
         from: data.from,
+        count: countBon + 1,
         products: BonProducts,
       };
 

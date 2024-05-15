@@ -20,4 +20,7 @@ module.exports = new (class BonService {
   deleteAll() {
     return Bon.deleteMany({});
   }
+  countBon() {
+    return Bon.countDocuments();
+  }
 })();
