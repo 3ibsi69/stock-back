@@ -8,5 +8,6 @@ router.get("/getAll", stockController.getAllStock);
 router.delete("/delete/:id", stockController.deleteStock);
 router.put("/update/:id", stockController.updateStock);
 router.post("/filter", stockController.filterCategory);
+router.post("/search", stockController.searchBynameOrDesignation);
 
 module.exports = router;

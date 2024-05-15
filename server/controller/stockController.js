@@ -60,4 +60,14 @@ module.exports = {
       res.status(500).send(error);
     }
   },
+
+  async searchBynameOrDesignation(req, res) {
+    try {
+      const data = req.body;
+      const stock = await StockService.searchBynameOrDesignation(data);
+      res.status(200).send(stock);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
 };

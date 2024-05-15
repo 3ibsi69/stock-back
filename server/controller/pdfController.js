@@ -8,12 +8,6 @@ const generatePDF = (req, res) => {
   if (!content) {
     return res.status(400).json({ error: "HTML content is required" });
   }
-  // montant avec tva
-  // ${(
-  //   product.quantite *
-  //   (product.prixVenteHT * 1.19 +
-  //     (product.prixVenteHT * product.MargeHT) / 100)
-  // ).toFixed(3)}
   let totalMontantSansTVA = content.reduce((total, item) => {
     return (
       total +

@@ -25,4 +25,12 @@ module.exports = new (class StockService {
   filterCategory(data) {
     return Stock.find({ category: data });
   }
+  searchBynameOrDesignation(data) {
+    return Stock.find({
+      $or: [
+        { name: { $regex: data.search, $options: "i" } },
+        { designation: { $regex: data.search, $options: "i" } },
+      ],
+    });
+  }
 })();
