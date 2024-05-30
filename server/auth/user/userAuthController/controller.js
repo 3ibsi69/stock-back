@@ -30,7 +30,8 @@ module.exports = {
   async update(req, res, next) {
     try {
       var Users = await UserService.update(req.params.id, req.body);
-      res.send({ msg: "updated" });
+      var getUpdatedUser = await UserService.getUserById(req.params.id);
+      res.send({ msg: "updated", getUpdatedUser });
     } catch (next) {
       res.status(401).json(next);
     }
